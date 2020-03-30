@@ -1,6 +1,10 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import { Button } from 'antd';
+import logo from "./logo.svg";
+import "./App.css";
+import DraggerItem from "./components/DraggerItem.js";
+
+
 
 function App() {
   return (
@@ -8,17 +12,14 @@ function App() {
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
         <p>
-          Edit <code>src/App.js</code> and save to reload.
+          选择视频文件或者文件夹，如果选择文件夹，会下载所有子目录下视频文件的字幕
         </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
+
       </header>
+      <article className="App-article">
+          <DraggerItem />
+          <Button type="primary">Button</Button>
+        </article>
     </div>
   );
 }
