@@ -1,8 +1,9 @@
 import React from "react";
-import { Button } from 'antd';
+// import Button from 'react';
 import logo from "./logo.svg";
 import "./App.css";
 import DraggerItem from "./components/DraggerItem.js";
+
 
 
 function App() {
@@ -16,7 +17,7 @@ function App() {
 
       </header>
           <DraggerItem />
-          <Button type="primary">Button</Button>
+          <button type="primary">Button</button>
     </div>
   );
 }
