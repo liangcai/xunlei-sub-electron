@@ -5,7 +5,6 @@ import "./App.css";
 import DraggerItem from "./components/DraggerItem.js";
 
 
-
 function App() {
   return (
     <div className="App">
@@ -16,10 +15,8 @@ function App() {
         </p>
 
       </header>
-      <article className="App-article">
           <DraggerItem />
           <Button type="primary">Button</Button>
-        </article>
     </div>
   );
 }

@@ -1,60 +1,75 @@
-import React from 'react';
-import { Upload } from 'antd';
-import { InboxOutlined } from '@ant-design/icons';
+import React, {useMemo} from 'react';
+import {useDropzone} from 'react-dropzone';
 
-const DraggerItem = () => {
+const baseStyle = {
+  flex: 1,
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center',
+  padding: '20px',
+  borderWidth: 2,
+  borderRadius: 2,
+  borderColor: '#eeeeee',
+  borderStyle: 'dashed',
+  backgroundColor: '#fafafa',
+  color: '#bdbdbd',
+  outline: 'none',
+  transition: 'border .24s ease-in-out'
+};
 
-  const { Dragger } = Upload;
-  
-  const props = {
-    name: "file",
-    multiple: true,
-    action: "",
-    onChange(info) {
-      console.log('onChange info:', info);
-    },
-    beforeUpload(file){
-      console.log('beforeUpload', file.name);
-    },
-    // onStart: (file) => {
-    //   console.log('onStart', file.name);
-    //   // this.refs.inner.abort(file);
-    // },
-    onSuccess(ret, file) {
-      console.log('onSuccess', ret, file.name);
-    },
-    onProgress(step, file) {
-      console.log('onProgress', Math.round(step.percent), file.name);
-    },
-    onError(err) {
-      console.log('onError', err);
-    },
-    customRequest({
-      action,
-      data,
-      file,
-      filename,
-      headers,
-      onError,
-      onProgress,
-      onSuccess,
-      withCredentials,
-    }) {
-      console.log('customRequest');
-    }
-  };
+const activeStyle = {
+  borderColor: '#2196f3'
+};
+
+const acceptStyle = {
+  borderColor: '#00e676'
+};
+
+const rejectStyle = {
+  borderColor: '#ff1744'
+};
+
+function StyledDropzone(props) {
+  const {
+    getRootProps,
+    getInputProps,
+    isDragActive,
+    isDragAccept,
+    isDragReject,
+    acceptedFiles,
+  } = useDropzone({accept: 'image/*'});
+
+  // const files = acceptedFiles.map(file => <li key={file.path}>{file.path}</li>);
+
+  const style = useMemo(() => ({
+    ...baseStyle,
+    ...(isDragActive ? activeStyle : {}),
+    ...(isDragAccept ? acceptStyle : {}),
+    ...(isDragReject ? rejectStyle : {})
+  }), [
+    isDragActive,
+    isDragAccept,
+    isDragReject
+  ]);
 
   return (
-    <Dragger {...props}>
-      <p className="ant-upload-drag-icon">
-        <InboxOutlined />
-      </p>
-      <p className="ant-upload-text">
-        Click or drag file to this area to upload
-      </p>
-      <p className="ant-upload-hint">支持单文件和多文件拖拽</p>
-    </Dragger>
+    <section className="container">
+      <div {...getRootProps({style})}>
+        <input {...getInputProps()} />
+        <p>Drag 'n' drop some files here, or click to select files</p>
+      </div>
+      <aside>
+          <h4>Files</h4>
+          <ul>
+            {acceptedFiles.map(file => (
+              <li key={file.path}>
+                {file.path} - {file.size} bytes
+              </li>
+            ))}
+          </ul>
+        </aside>
+    </section>
   );
 }
 
-export default DraggerItem;
+export default StyledDropzone;
