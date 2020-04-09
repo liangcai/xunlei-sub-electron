@@ -1,42 +1,47 @@
-import React, {Component} from 'react';
-import Dropzone from 'react-dropzone';
+import React from "react";
+import { useDropzone } from "react-dropzone";
+import Subzone from "./Subzone";
 
-class Basic extends Component {
-  // constructor() {
-  //   super();
-  //   this.onDrop = (files) => {
-  //     this.setState({files});
-  //     console.log(files);
-  //   };
-  //   this.state = {
-  //     files: []
-  //   };
-  // }
+function Basic(props) {
+  const { acceptedFiles, getRootProps, getInputProps } = useDropzone({
+    accept: 'video/*'
+  });
 
-  render() {
-    const files = this.props.files.map(file => (
-      <li key={file.name}>
-        {file.name} - {file.size} bytes
-      </li>
-    ));
+  const getsubs = (idx) => {
+    if (props.subs && "subs" in props.subs[idx]) {
+      return props.subs[idx].subs;
+    } else {
+      return [];
+    }
+  };
 
-    return (
-      <Dropzone onDrop={this.onDrop}>
-        {({getRootProps, getInputProps}) => (
-          <section className="container">
-            <div {...getRootProps({className: 'dropzone'})}>
-              <input {...getInputProps()} />
-              <p>Drag 'n' drop some files here, or click to select files</p>
-            </div>
-            <aside>
-              <h4>Files</h4>
-              <ul>{files}</ul>
-            </aside>
-          </section>
-        )}
-      </Dropzone>
-    );
-  }
+  const acceptedFilesItems = acceptedFiles.map(file => (
+    <li key={file.path}>
+      {file.path} - {file.size} bytes
+    </li>
+  ));
+
+
+  const files = props.files.map((file, idx) => (
+    <li key={file.name}>
+      {file.name} - {file.size} bytes
+      <Subzone subs={getsubs(idx)} />
+    </li>
+  ));
+
+  return (
+    <section className="container">
+      <div {...getRootProps({ className: "dropzone" })}>
+        <input {...getInputProps()} />
+        <p>Drag 'n' drop some files here, or click to select files</p>
+        <em>(Only video will be accepted)</em>
+      </div>
+      <aside>
+        <h4>Files</h4>
+        <ul>{files}</ul>
+      </aside>
+    </section>
+  );
 }
 
 export default Basic;

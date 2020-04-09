@@ -1,5 +1,4 @@
 import React from "react";
-// import Button from 'react';
 import logo from "./logo.svg";
 import "./App.css";
 import DraggerItem from "./components/DraggerItem.js";
@@ -16,18 +15,18 @@ function App() {
         </p>
 
       </header>
-          <DraggerItem files={Files} />
+          <DraggerItem files={Files} subs={Subs} />
           <button type="primary">Button</button>
     </div>
   );
 }
 
 const Files = [
+  // eslint-disable-next-line
   {name: '寄生虫.Parasite.2019.KORAEN.1080p.BluRay.x264.mkv', path: '/home/cail/d/迅雷下载\寄生虫.Parasite.2019.KORAEN.1080p.BluRay.x264.mkv', size: 1111111},
 ]
 
 const Subs = [
-  [
     {
       "message": "search success",
       "subs": [
@@ -96,7 +95,6 @@ const Subs = [
         }
       ]
     }
-  ],
 ]
 
 export default App;
