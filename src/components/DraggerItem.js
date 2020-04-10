@@ -22,12 +22,32 @@ function Basic(props) {
   ));
 
 
-  const files = props.files.map((file, idx) => (
-    <li key={file.name}>
-      {file.name} - {file.size} bytes
-      <Subzone subs={getsubs(idx)} />
-    </li>
-  ));
+  // const files = props.files.map((file, idx) => (
+  //   <li key={file.name}>
+  //     {file.name} - {file.size} bytes
+  //     <Subzone subs={getsubs(idx)} />
+  //   </li>
+  // ));
+
+  const mapTreeData = (data) => {
+    const result = data.map((item, index) => {
+      return {
+        title: item.name,
+        key: item.path,
+        // path: item.path,
+        children: item.subs.map((sub, idx) => {
+          return {
+            title: sub.sname,
+            key: sub.surl,
+            rate: sub.rate,
+          };
+        })
+      };
+    })
+    console.log('mapTreeDate result: ', result)
+    return result;
+  };
+
 
   return (
     <section className="container">
@@ -38,7 +58,7 @@ function Basic(props) {
       </div>
       <aside>
         <h4>Files</h4>
-        <ul>{files}</ul>
+        <Subzone substree={mapTreeData(props.substree)} />
       </aside>
     </section>
   );

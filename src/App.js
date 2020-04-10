@@ -15,19 +15,21 @@ function App() {
         </p>
 
       </header>
-          <DraggerItem files={Files} subs={Subs} />
+          <DraggerItem substree={subsTree} />
           <button type="primary">Button</button>
     </div>
   );
 }
 
-const Files = [
-  // eslint-disable-next-line
-  {name: '寄生虫.Parasite.2019.KORAEN.1080p.BluRay.x264.mkv', path: '/home/cail/d/迅雷下载\寄生虫.Parasite.2019.KORAEN.1080p.BluRay.x264.mkv', size: 1111111},
-]
+// const Files = [
+//   {name: '寄生虫.Parasite.2019.KORAEN.1080p.BluRay.x264.mkv', path: '/home/cail/d/迅雷下载\寄生虫.Parasite.2019.KORAEN.1080p.BluRay.x264.mkv', size: 1111111},
+// ]
 
-const Subs = [
-    {
+const subsTree = [
+    { 
+      // eslint-disable-next-line
+      "name": '寄生虫.Parasite.2019.KORAEN.1080p.BluRay.x264.mkv', path: '/home/cail/d/迅雷下载\寄生虫.Parasite.2019.KORAEN.1080p.BluRay.x264.mkv', 
+      "size": 1111111,
       "message": "search success",
       "subs": [
         {
