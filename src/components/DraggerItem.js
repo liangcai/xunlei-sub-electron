@@ -1,6 +1,7 @@
 import React from "react";
 import { useDropzone } from "react-dropzone";
 import Subzone from "./Subzone";
+import { Badge, Rate } from 'antd';
 
 function Basic(props) {
   const { acceptedFiles, getRootProps, getInputProps } = useDropzone({
@@ -39,6 +40,9 @@ function Basic(props) {
           return {
             title: sub.sname,
             key: sub.surl,
+            // icon: <Rate disabled defaultValue={parseInt(sub.rate)} />,
+            // icon: <div style={{width: 240}}><Badge count={parseInt(sub.svote)} style={{ backgroundColor: '#52c41a' }} /><Rate disabled defaultValue={parseInt(sub.rate)} /></div>,
+            svote: sub.svote,
             rate: sub.rate,
           };
         })
