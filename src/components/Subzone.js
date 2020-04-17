@@ -4,7 +4,7 @@ import { Tree, Rate, Badge } from 'antd';
 
 const { TreeNode } = Tree;
 
-function Subzone(props) {
+function SubTree(props) {
   // const subs = props.subs.map((sub) => (
   //   <li key={sub.sname}>
   //     {sub.rate} / {sub.sname}
@@ -20,13 +20,15 @@ function Subzone(props) {
     console.log('onChecked', checkedKeys, info);
   };
 
-  function Title(props) {
+  function Sub(props) {
     let { rate, svote, title } = props;
     return (
       <div>
+      <span className="ant-rate-text text-hidden" title={title}>
         <Badge count={parseInt(svote)} style={{ backgroundColor: '#52c41a', width: 45 }} />
         <Rate disabled defaultValue={parseInt(rate)} />
-        <span className="ant-rate-text text-hidden" title={title}>{title}</span>
+        {title}
+      </span>
       </div>
     )
   }
@@ -52,7 +54,7 @@ function Subzone(props) {
       >
         {data.children.map(sub => (
           <TreeNode 
-            title={<Title {...sub} />}
+            title={<Sub {...sub} />}
             key={sub.key}
             // icon={<Icon {...sub} />}
           />
@@ -63,4 +65,44 @@ function Subzone(props) {
   );
 };
 
-export default Subzone;
+const mapTreeData = (data) => {
+  const result = data.map((item, index) => {
+    return {
+      title: item.name,
+      key: item.path,
+      // path: item.path,
+      children: item.subs.map((sub, idx) => {
+        return {
+          title: sub.sname,
+          key: sub.surl,
+          // icon: <Rate disabled defaultValue={parseInt(sub.rate)} />,
+          // icon: <div style={{width: 240}}><Badge count={parseInt(sub.svote)} style={{ backgroundColor: '#52c41a' }} /><Rate disabled defaultValue={parseInt(sub.rate)} /></div>,
+          svote: sub.svote,
+          rate: sub.rate,
+        };
+      })
+    };
+  })
+  console.log('mapTreeDate result: ', result)
+  return result;
+};
+
+function SubZone(props) {
+
+  // const getsubs = (idx) => {
+  //   if (props.subs && "subs" in props.subs[idx]) {
+  //     return props.subs[idx].subs;
+  //   } else {
+  //     return [];
+  //   }
+  // };
+
+  return (
+    <aside>
+    <h4>Files</h4>
+    <SubTree substree={mapTreeData(props.substree)} />
+  </aside>
+  )
+}
+
+export default SubZone;

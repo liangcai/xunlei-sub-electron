@@ -1,13 +1,24 @@
 import React from "react";
 import logo from "./logo.svg";
 import "./App.css";
-import DraggerItem from "./components/DraggerItem.js";
-
+import DraggerZone from "./components/DraggerZone.js";
+import { Button } from "antd";
+import { DownloadOutlined } from '@ant-design/icons';
 
 
 function App() {
   return (
     <div className="App">
+          <Header />
+          <DraggerZone substree={subsTree} />
+          <DownloadBtn />
+          <Footer />
+    </div>
+  );
+}
+
+function Header() {
+  return (
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
         <p>
@@ -15,12 +26,20 @@ function App() {
         </p>
 
       </header>
-          <DraggerItem substree={subsTree} />
-          <button type="primary">Button</button>
-    </div>
-  );
+  )
 }
 
+function DownloadBtn() {
+  return (
+    <Button type="primary" icon={<DownloadOutlined />} size={"large"} block>下载</Button>
+  )
+}
+
+function Footer() {
+  return (
+    <footer></footer>
+  )
+}
 // const Files = [
 //   {name: '寄生虫.Parasite.2019.KORAEN.1080p.BluRay.x264.mkv', path: '/home/cail/d/迅雷下载\寄生虫.Parasite.2019.KORAEN.1080p.BluRay.x264.mkv', size: 1111111},
 // ]
