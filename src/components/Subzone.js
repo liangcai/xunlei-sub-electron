@@ -5,23 +5,28 @@ import { Tree, Rate, Badge } from 'antd';
 const { TreeNode } = Tree;
 
 function SubTree(props) {
-  // const subs = props.subs.map((sub) => (
-  //   <li key={sub.sname}>
-  //     {sub.rate} / {sub.sname}
-  //   </li>
-  // ));
 
-  // return <ul>{subs}</ul>;
+  const handCheck = (checkedKeys, info) => {
+    console.log("onChecked", checkedKeys, info);
+    let checkedSubs = info.checkedNodes
+      .map((item) => {
+        if (!("children" in item)) {
+          return {fpath: item.title.props.fpath, surl: item.title.props.surl, key: item.key};
+        }
+      })
+      .filter((surl) => {
+        return surl !== undefined;
+      });
+    console.log("checkedSubs state:", checkedSubs);
+    props.setSelectedSubs(checkedSubs);
+  };
+
   const onSelect = (selectedKeys, info) => {
     console.log('onSelected', selectedKeys, info);
   };
 
-  const onCheck = (checkedKeys, info) => {
-    console.log('onChecked', checkedKeys, info);
-  };
-
   function Sub(props) {
-    let { rate, svote, title } = props;
+    let { rate, svote, title, onCheck } = props;
     return (
       <div>
       <span className="ant-rate-text text-hidden" title={title}>
@@ -36,23 +41,20 @@ function SubTree(props) {
   return (
     <Tree 
       showIcon
-      defaultExpandAll
+      defaultExpandAll  //只在第一次渲染时有用.
       checkable
-      defaultExpandedKeys={[]}
+      // defaultExpandedKeys={[]}
       defaultSelectedKeys={[]}
       defaultCheckedKeys={[]}
       onSelect={onSelect}
-      onCheck={onCheck}
-      // treeData={props.substree}
-      // children={props.substree.subs}
+      onCheck={handCheck}
     >
     {props.substree.map(data => (
-      console.log('data: ',data),
       <TreeNode 
         title={data.title} 
         key={data.key}
       >
-        {data.children.map(sub => (
+        {data.subs.map(sub => (
           <TreeNode 
             title={<Sub {...sub} />}
             key={sub.key}
@@ -69,38 +71,31 @@ const mapTreeData = (data) => {
   const result = data.map((item, index) => {
     return {
       title: item.name,
-      key: item.path,
-      // path: item.path,
-      children: item.subs.map((sub, idx) => {
+      key: index.toString(),
+      subs: item.subs.map((sub, idx) => {
         return {
           title: sub.sname,
-          key: sub.surl,
+          fpath: item.fpath,
           // icon: <Rate disabled defaultValue={parseInt(sub.rate)} />,
           // icon: <div style={{width: 240}}><Badge count={parseInt(sub.svote)} style={{ backgroundColor: '#52c41a' }} /><Rate disabled defaultValue={parseInt(sub.rate)} /></div>,
           svote: sub.svote,
+          surl: sub.surl,
           rate: sub.rate,
+          key: index.toString() + "-" + idx.toString(),
         };
       })
     };
   })
-  console.log('mapTreeDate result: ', result)
+  console.debug('mapTreeDate result: ', result)
   return result;
 };
 
 function SubZone(props) {
 
-  // const getsubs = (idx) => {
-  //   if (props.subs && "subs" in props.subs[idx]) {
-  //     return props.subs[idx].subs;
-  //   } else {
-  //     return [];
-  //   }
-  // };
-
   return (
     <aside>
-    <h4>Files</h4>
-    <SubTree substree={mapTreeData(props.substree)} />
+    <h4>视频文件列表</h4>
+    <SubTree substree={mapTreeData(props.substree)} setSelectedSubs={props.setSelectedSubs} />
   </aside>
   )
 }

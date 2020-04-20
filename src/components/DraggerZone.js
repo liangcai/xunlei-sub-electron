@@ -1,49 +1,21 @@
-import React from "react";
-import { useDropzone } from "react-dropzone";
+import React, { useState } from "react";
+import DraggerArea from "./DraggerArea";
 import SubZone from "./Subzone";
-
-
-function DraggerArea(props) {
-
-  const { acceptedFiles, getRootProps, getInputProps } = useDropzone({
-    accept: 'video/*'
-  });
-
-  const acceptedFilesItems = acceptedFiles.map(file => (
-    <li key={file.path}>
-      {file.path} - {file.size} bytes
-    </li>
-  ));
-
-  return (
-    <div {...getRootProps({ className: "dropzone" })}>
-    <input {...getInputProps()} />
-    <p>Drag 'n' drop some files here, or click to select files</p>
-    <em>(Only video will be accepted)</em>
-  </div>
-  )
-}
-
+import DownloadBtn from "./Download";
 
 function DraggerZone(props) {
 
-
-  // const files = props.files.map((file, idx) => (
-  //   <li key={file.name}>
-  //     {file.name} - {file.size} bytes
-  //     <Subzone subs={getsubs(idx)} />
-  //   </li>
-  // ));
-
+  const [treeData, setTreeData] = useState([]);
+  const [selectedSubs, setSelectedSubs] = useState();
 
   return (
     <section className="container">
-    <DraggerArea />
-    <SubZone substree={props.substree} />
+      <DraggerArea setTreeData={setTreeData} />
+      <SubZone substree={treeData} setSelectedSubs={setSelectedSubs} />
+      <DownloadBtn selectedSubs={selectedSubs}
+      />
     </section>
   );
 }
-
-
 
 export default DraggerZone;
