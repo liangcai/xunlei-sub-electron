@@ -1,7 +1,16 @@
-import React from "react";
+import React, {useState} from "react";
 import { useDropzone } from "react-dropzone";
 import SubZone from "./Subzone";
+import { Button } from "antd";
+import { DownloadOutlined } from "@ant-design/icons";
 
+function DownloadBtn() {
+  return (
+    <Button type="primary" icon={<DownloadOutlined />} size={"large"} block>
+      下载
+    </Button>
+  );
+}
 
 function DraggerArea(props) {
 
@@ -35,11 +44,27 @@ function DraggerZone(props) {
   //   </li>
   // ));
 
+  const [treeData, setTreeData] = useState(props.substree);
+  const [selectedSubs, setSelectedSubs] = useState()
+
+  const handCheck = (checkedKeys, info) => {
+    console.log('onChecked', checkedKeys, info);
+    let checkedSubs = info.checkedNodes.map((item) => {
+      if (!('subs' in item)) {
+        return item.title.props.surl;
+      }
+    }).filter((item)=>{
+      return item != undefined;
+    })
+    console.log('checkedSubs state:', checkedSubs);
+    setSelectedSubs(checkedSubs)
+  };
 
   return (
     <section className="container">
     <DraggerArea />
-    <SubZone substree={props.substree} />
+    <SubZone substree={treeData} handCheck={handCheck}/>
+    <DownloadBtn />
     </section>
   );
 }

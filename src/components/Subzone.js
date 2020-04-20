@@ -16,12 +16,8 @@ function SubTree(props) {
     console.log('onSelected', selectedKeys, info);
   };
 
-  const onCheck = (checkedKeys, info) => {
-    console.log('onChecked', checkedKeys, info);
-  };
-
   function Sub(props) {
-    let { rate, svote, title } = props;
+    let { rate, svote, title, onCheck } = props;
     return (
       <div>
       <span className="ant-rate-text text-hidden" title={title}>
@@ -42,17 +38,15 @@ function SubTree(props) {
       defaultSelectedKeys={[]}
       defaultCheckedKeys={[]}
       onSelect={onSelect}
-      onCheck={onCheck}
-      // treeData={props.substree}
-      // children={props.substree.subs}
+      onCheck={props.onCheck}
     >
     {props.substree.map(data => (
-      console.log('data: ',data),
+      console.debug('data: ',data),
       <TreeNode 
         title={data.title} 
         key={data.key}
       >
-        {data.children.map(sub => (
+        {data.subs.map(sub => (
           <TreeNode 
             title={<Sub {...sub} />}
             key={sub.key}
@@ -69,21 +63,22 @@ const mapTreeData = (data) => {
   const result = data.map((item, index) => {
     return {
       title: item.name,
-      key: item.path,
+      key: item.fid,
       // path: item.path,
-      children: item.subs.map((sub, idx) => {
+      subs: item.subs.map((sub, idx) => {
         return {
           title: sub.sname,
-          key: sub.surl,
+          key: sub.subid,
           // icon: <Rate disabled defaultValue={parseInt(sub.rate)} />,
           // icon: <div style={{width: 240}}><Badge count={parseInt(sub.svote)} style={{ backgroundColor: '#52c41a' }} /><Rate disabled defaultValue={parseInt(sub.rate)} /></div>,
           svote: sub.svote,
+          surl: sub.surl,
           rate: sub.rate,
         };
       })
     };
   })
-  console.log('mapTreeDate result: ', result)
+  console.debug('mapTreeDate result: ', result)
   return result;
 };
 
@@ -100,7 +95,7 @@ function SubZone(props) {
   return (
     <aside>
     <h4>Files</h4>
-    <SubTree substree={mapTreeData(props.substree)} />
+    <SubTree substree={mapTreeData(props.substree)} onCheck={props.handCheck} />
   </aside>
   )
 }
