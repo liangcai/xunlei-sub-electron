@@ -29,5 +29,12 @@ def download_sub():
     f.write(data)
   return {'message': 'download success'}, 200
 
+@app.after_request
+def after_request(response):
+  header = response.headers
+  header['Access-Control-Allow-Origin'] = '*'
+  return response
+
+
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000, debug=True)
+    app.run(host='0.0.0.0', port=5000, debug=True, threaded=True)

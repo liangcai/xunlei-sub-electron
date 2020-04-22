@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useDropzone } from "react-dropzone";
-
+import axios from "axios";
+import qs from "qs";
 
 export default function DraggerArea(props) {
   const { acceptedFiles, getRootProps, getInputProps } = useDropzone({
@@ -8,26 +9,37 @@ export default function DraggerArea(props) {
     onDrop: handonDrop,
   });
 
-  const acceptedFilesItems = acceptedFiles.map((file) => (
-    <li key={file.path}>
-      {file.path} - {file.size} bytes
-    </li>
-  ));
+  const getTreeData = async (files) => {
+    return Promise.all(
+      files.map((file) => {
+        return querySub(file.path);
+      })
+    );
+  };
 
-  const getTreeData = (files) => {
-    files.map((file) => {
-      querySub(file.path);
-    })
+  async function handonDrop(acceptedFiles) {
+    getTreeData(acceptedFiles).then((result) => {
+      console.log("treedata result: ", result);
+    });
   }
 
-  function handonDrop(acceptedFiles) {
-    // const req = request.post('/api');
-    getTreeData(acceptedFiles);
-  }
-
-  const querySub = (path) => {
+  const querySub = async (path) => {
     console.log("query sub from python api, arg: ", path);
-  }
+    const data = {
+      fpath:
+        "/home/cail/d/迅雷下载/寄生虫.Parasite.2019.KORAEN.1080p.BluRay.x264.mkv",
+    };
+    const options = {
+      method: "POST",
+      headers: { "content-type": "application/x-www-form-urlencoded" },
+      data: qs.stringify(data),
+      url: "http://192.168.1.182:5000/api/subs",
+    };
+    return axios(options).then((res) => {
+      console.log("data:", res.data);
+      return res.data;
+    });
+  };
 
   return (
     <div {...getRootProps({ className: "dropzone" })}>
