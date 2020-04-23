@@ -12,7 +12,7 @@ export default function DraggerArea(props) {
   const getTreeData = async (files) => {
     return Promise.all(
       files.map((file) => {
-        return querySub(file.path);
+        return querySub(file);
       })
     );
   };
@@ -23,8 +23,8 @@ export default function DraggerArea(props) {
     });
   }
 
-  const querySub = async (path) => {
-    console.log("query sub from python api, arg: ", path);
+  const querySub = async (file) => {
+    console.log("query sub from python api, arg: ", file.path);
     const data = {
       fpath:
         "/home/cail/d/迅雷下载/寄生虫.Parasite.2019.KORAEN.1080p.BluRay.x264.mkv",
@@ -37,6 +37,9 @@ export default function DraggerArea(props) {
     };
     return axios(options).then((res) => {
       console.log("data:", res.data);
+      res.data.fpath = file.path;
+      res.data.name = file.name;
+      res.data.size = file.size;
       return res.data;
     });
   };

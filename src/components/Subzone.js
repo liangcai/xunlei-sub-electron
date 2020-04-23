@@ -64,10 +64,11 @@ const mapTreeData = (data) => {
     return {
       title: item.name,
       key: item.fid,
-      // path: item.path,
+      // fpath: item.path,
       subs: item.subs.map((sub, idx) => {
         return {
           title: sub.sname,
+          fpath: item.path,
           key: sub.subid,
           // icon: <Rate disabled defaultValue={parseInt(sub.rate)} />,
           // icon: <div style={{width: 240}}><Badge count={parseInt(sub.svote)} style={{ backgroundColor: '#52c41a' }} /><Rate disabled defaultValue={parseInt(sub.rate)} /></div>,

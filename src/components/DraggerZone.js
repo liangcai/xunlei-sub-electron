@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import DraggerArea from "./DraggerArea";
 import SubZone from "./Subzone";
 import DownloadBtn from "./Download";
+import Axios from "axios";
 
 function DraggerZone(props) {
 
@@ -12,12 +13,12 @@ function DraggerZone(props) {
     console.log("onChecked", checkedKeys, info);
     let checkedSubs = info.checkedNodes
       .map((item) => {
-        if (!("subs" in item)) {
-          return item.title.props.surl;
+        if (!("children" in item)) {
+          return {fpath: item.title.props.fpath, surl: item.title.props.surl, key: item.key};
         }
       })
-      .filter((item) => {
-        return item !== undefined;
+      .filter((surl) => {
+        return surl !== undefined;
       });
     console.log("checkedSubs state:", checkedSubs);
     setSelectedSubs(checkedSubs);
@@ -28,9 +29,16 @@ function DraggerZone(props) {
       console.log("请先选择要下载的字幕");
       alert("请先选择要下载的字幕");
     } else {
-      console.log("click DownloadBtn, downloading: ", selectedSubs);
+      // console.log("click DownloadBtn, downloading: ", selectedSubs);
+      selectedSubs.map(item => {
+        downloadSub(item);
+      })
     }
   };
+
+  const downloadSub = (item) => {
+    console.log("download, url:", item.surl, "savedpath: ", item.fpath);
+  }
 
   return (
     <section className="container">
