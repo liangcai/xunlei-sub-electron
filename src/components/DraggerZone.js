@@ -41,11 +41,17 @@ function DraggerZone(props) {
         sname: sfullname
       }
       console.log("download, url:", url, "data:", qs.stringify(data));
-        Axios.post(url, data=qs.stringify(data))
+        Axios(
+          {
+            url:url, 
+            method: 'POST',
+            data: qs.stringify(data),
+            headers: {'content-type': 'application/x-www-form-urlencoded'}
+          })
           .then((res) => {
             console.log(res.headers);
-            // let filename = res.headers['Content-Disposition'].match(/filename=(.*)/)[1];
-            let filename = sfullname;
+            let filename = decodeURI(res.headers['content-disposition'].match(/filename=(.*)/)[1]);
+            // let filename = sfullname;
             FileDownload(res.data, filename);
           })
       })
