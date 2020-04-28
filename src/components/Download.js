@@ -2,7 +2,7 @@ import React from "react";
 import { Button, Alert } from "antd";
 import { DownloadOutlined } from "@ant-design/icons";
 
-export default function DownloadBtn(props) {
+function DownloadBtn(props) {
   return (
     <Button
       type="primary"
@@ -16,3 +16,14 @@ export default function DownloadBtn(props) {
     </Button>
   );
 }
+
+function MyIframe(props) {
+  console.log("myIframe, src:", props.iframeSrc);
+  return (
+    <div style={{display: 'none'}}>
+      <iframe src={props.iframeSrc} />
+    </div>
+  )
+}
+
+export {DownloadBtn, MyIframe}
