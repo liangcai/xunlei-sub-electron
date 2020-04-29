@@ -91,7 +91,10 @@ const mapTreeData = (data) => {
 };
 
 function SubZone(props) {
-
+  if(Array.isArray(props.substree) && props.substree.length ===0) {
+    return (<aside></aside>);
+  };
+  
   return (
     <aside>
     <h4>视频文件列表</h4>
