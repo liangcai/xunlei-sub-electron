@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { useDropzone } from "react-dropzone";
 import axios from "axios";
 import qs from "qs";
@@ -20,6 +20,7 @@ export default function DraggerArea(props) {
   async function handonDrop(acceptedFiles) {
     getTreeData(acceptedFiles).then((result) => {
       console.log("treedata result: ", result);
+      props.setTreeData(result);
     });
   }
 

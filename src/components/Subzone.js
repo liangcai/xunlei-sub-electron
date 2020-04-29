@@ -63,18 +63,17 @@ const mapTreeData = (data) => {
   const result = data.map((item, index) => {
     return {
       title: item.name,
-      key: item.fid,
-      // fpath: item.path,
+      key: index.toString(),
       subs: item.subs.map((sub, idx) => {
         return {
           title: sub.sname,
-          fpath: item.path,
-          key: sub.subid,
+          fpath: item.fpath,
           // icon: <Rate disabled defaultValue={parseInt(sub.rate)} />,
           // icon: <div style={{width: 240}}><Badge count={parseInt(sub.svote)} style={{ backgroundColor: '#52c41a' }} /><Rate disabled defaultValue={parseInt(sub.rate)} /></div>,
           svote: sub.svote,
           surl: sub.surl,
           rate: sub.rate,
+          key: index.toString() + "-" + idx.toString(),
         };
       })
     };

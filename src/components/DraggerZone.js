@@ -8,7 +8,7 @@ import qs from "qs";
 
 function DraggerZone(props) {
 
-  const [treeData, setTreeData] = useState(props.substree);
+  const [treeData, setTreeData] = useState([]);
   const [selectedSubs, setSelectedSubs] = useState();
 
   const handCheck = (checkedKeys, info) => {
@@ -61,19 +61,10 @@ function DraggerZone(props) {
     // return <MyIframe iframeSrc={url} />; 
   };
 
-  const downloadSub = (props) => {
-    let url = "http://192.168.1.182:5000/api/downsub?&surl=" + props.surl + "&sname=" + props.sname +'.srt';
-    console.log("download, url:", url);
-    // Axios.get(url)
-    //   .then((res) => {
-    //     return <MyIframe iframeSrc={url} />
-    //   })
-    return <MyIframe iframeSrc={url} />; 
-  }
 
   return (
     <section className="container">
-      <DraggerArea />
+      <DraggerArea setTreeData={setTreeData} />
       <SubZone substree={treeData} handCheck={handCheck} />
       <DownloadBtn
         handDownloadBtnClick={handDownloadBtnClick}
