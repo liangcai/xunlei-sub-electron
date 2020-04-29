@@ -5,13 +5,22 @@ import { Tree, Rate, Badge } from 'antd';
 const { TreeNode } = Tree;
 
 function SubTree(props) {
-  // const subs = props.subs.map((sub) => (
-  //   <li key={sub.sname}>
-  //     {sub.rate} / {sub.sname}
-  //   </li>
-  // ));
 
-  // return <ul>{subs}</ul>;
+  const handCheck = (checkedKeys, info) => {
+    console.log("onChecked", checkedKeys, info);
+    let checkedSubs = info.checkedNodes
+      .map((item) => {
+        if (!("children" in item)) {
+          return {fpath: item.title.props.fpath, surl: item.title.props.surl, key: item.key};
+        }
+      })
+      .filter((surl) => {
+        return surl !== undefined;
+      });
+    console.log("checkedSubs state:", checkedSubs);
+    props.setSelectedSubs(checkedSubs);
+  };
+
   const onSelect = (selectedKeys, info) => {
     console.log('onSelected', selectedKeys, info);
   };
@@ -32,16 +41,15 @@ function SubTree(props) {
   return (
     <Tree 
       showIcon
-      defaultExpandAll
+      defaultExpandAll  //只在第一次渲染时有用.
       checkable
-      defaultExpandedKeys={[]}
+      // defaultExpandedKeys={[]}
       defaultSelectedKeys={[]}
       defaultCheckedKeys={[]}
       onSelect={onSelect}
-      onCheck={props.onCheck}
+      onCheck={handCheck}
     >
     {props.substree.map(data => (
-      console.debug('data: ',data),
       <TreeNode 
         title={data.title} 
         key={data.key}
@@ -84,18 +92,10 @@ const mapTreeData = (data) => {
 
 function SubZone(props) {
 
-  // const getsubs = (idx) => {
-  //   if (props.subs && "subs" in props.subs[idx]) {
-  //     return props.subs[idx].subs;
-  //   } else {
-  //     return [];
-  //   }
-  // };
-
   return (
     <aside>
-    <h4>Files</h4>
-    <SubTree substree={mapTreeData(props.substree)} onCheck={props.handCheck} />
+    <h4>视频文件列表</h4>
+    <SubTree substree={mapTreeData(props.substree)} setSelectedSubs={props.setSelectedSubs} />
   </aside>
   )
 }
