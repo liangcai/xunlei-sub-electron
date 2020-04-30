@@ -2,15 +2,21 @@
   "name": "xunlei-sub-electron",
   "version": "0.1.0",
   "private": true,
-  "main": "main.js",
+  "main": "public/main.js",
   "homepage": ".",
   "build": {
-    "appid": "com.xx.app",
+    "appId": "com.xx.app",
     "mac": {
-      "target": ["dmg", "zip"]
+      "target": [
+        "dmg",
+        "zip"
+      ]
     },
     "win": {
-      "target": ["nsis", "zip"]
+      "target": [
+        "nsis",
+        "zip"
+      ]
     }
   },
   "dependencies": {
@@ -33,6 +39,7 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "app": "electron .",
+    "preelectron-pack": "npm run build",
     "electron-pack": "electron-builder --win --x64"
   },
   "eslintConfig": {
