@@ -28,7 +28,7 @@ export default function DraggerArea(props) {
     console.log("query sub from python api, arg: ", file.path);
     const data = {
       fpath:
-        "/home/cail/d/迅雷下载/寄生虫.Parasite.2019.KORAEN.1080p.BluRay.x264.mkv",
+        file.path,
     };
     const options = {
       method: "POST",
