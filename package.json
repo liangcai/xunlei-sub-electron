@@ -2,10 +2,19 @@
   "name": "xunlei-sub-electron",
   "version": "0.1.0",
   "private": true,
-  "main": "public/electron.js",
+  "main": "electron.js",
   "homepage": ".",
   "build": {
     "appId": "com.xx.app",
+    "extends": null,
+    "asar": false,
+    "files": [
+      "build/**/*",
+      "electron.js",
+      "preload.js",
+      ".env",
+      "pydist/app/*"
+    ],
     "mac": {
       "target": [
         "dmg",
@@ -25,24 +34,28 @@
     "@testing-library/user-event": "^7.2.1",
     "antd": "^4.1.2",
     "axios": "^0.19.2",
+    "create-react-app": "^3.4.1",
+    "dotenv": "^8.2.0",
     "js-file-download": "^0.4.11",
     "python-shell": "^1.0.8",
     "qs": "^6.9.3",
     "react": "^16.13.1",
+    "react-dev-utils": "^10.0.0",
     "react-dom": "^16.13.1",
     "react-dropzone": "^10.2.2",
-    "react-scripts": "3.4.1"
+    "react-scripts": "^3.4.0"
   },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "app": "electron .",
-    "prepack-win": "npm run build",
+    "dev": "cross-env NODE_ENV=development electron .",
+    "prepack-win": "npm run build && npm run build-python",
     "pack-win": "electron-builder --win --x64",
-    "prepack-mac": "npm run build",
-    "pack-mac": "electron-builder --mac"
+    "prepack-mac": "npm run build && npm run build-python",
+    "pack-mac": "electron-builder --mac",
+    "build-python": "pyinstaller -y ./api/app.py --clean --distpath ./pydist"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -60,6 +73,7 @@
     ]
   },
   "devDependencies": {
+    "cross-env": "^7.0.2",
     "electron": "^8.2.4",
     "electron-builder": "^22.6.0"
   }

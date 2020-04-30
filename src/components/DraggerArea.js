@@ -34,7 +34,7 @@ export default function DraggerArea(props) {
       method: "POST",
       headers: { "content-type": "application/x-www-form-urlencoded" },
       data: qs.stringify(data),
-      url: "http://192.168.1.182:5000/api/subs",
+      url: "http://127.0.0.1:5000/api/subs",
     };
     return axios(options).then((res) => {
       console.log("data:", res.data);

@@ -17,7 +17,7 @@ function DownloadBtn(props) {
       let sname = item.fpath.replace(/^.*[\\\/]/, '').replace(/^\.[^\.]*$/, '');
       let sext = item.surl.replace(/^.*\./, '');
       let sfullname = sname + "." + sext;
-      let url = "http://192.168.1.182:5000/api/downsub";
+      let url = "http://127.0.0.1:5000/api/downsub";
       let data = {
         surl: item.surl,
         sname: sfullname
