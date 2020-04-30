@@ -3,6 +3,7 @@ const {app, BrowserWindow} = require('electron')
 const path = require('path')
 const url = require('url')
 const {PythonShell} = require("python-shell")
+require('dotenv').config()
 
 function createWindow () {
   // Create the browser window.
@@ -16,6 +17,9 @@ function createWindow () {
 
   // and load the index.html of the app.
   // mainWindow.loadURL('http://localhost:3000/')
+  if (process.env.DEBUG) {
+    
+  }
   mainWindow.loadURL(url.format({
     pathname: path.join(__dirname, '../build/index.html'),
     protocol: 'file:',
@@ -26,13 +30,29 @@ function createWindow () {
   // mainWindow.webContents.openDevTools()
 }
 
-PythonShell.run(
-  "api/app.py", {pythonPath: ".venv/bin/python"}, function(err, results){
-    if (err) throw err
-    console.log('app.py is running')
-    console.log('results', results)
+const OS = process.platform;
+
+if (process.env.DEBUG) {
+  console.log('use python-shell');
+
+  let pythonPath;
+  if (OS === 'darwin' || OS === 'linux') {
+    pythonPath = '.venv/bin/python'
+  } else {
+    pythonPath = '.venv/Scripts/python'
   }
-)
+  
+  PythonShell.run(
+    "api/app.py", {pythonPath: pythonPath}, function(err, results){
+      if (err) throw err
+      console.log('app.py is running')
+      console.log('results', results)
+    }
+  );
+} else {
+  console.log('use pyinstaller');
+}
+
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
