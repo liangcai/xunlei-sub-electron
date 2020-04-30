@@ -2,7 +2,7 @@
   "name": "xunlei-sub-electron",
   "version": "0.1.0",
   "private": true,
-  "main": "public/main.js",
+  "main": "public/electron.js",
   "homepage": ".",
   "build": {
     "appId": "com.xx.app",
@@ -39,8 +39,10 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "app": "electron .",
-    "preelectron-pack": "npm run build",
-    "electron-pack": "electron-builder --win --x64"
+    "prepack-win": "npm run build",
+    "pack-win": "electron-builder --win --x64",
+    "prepack-mac": "npm run build",
+    "pack-mac": "electron-builder --mac"
   },
   "eslintConfig": {
     "extends": "react-app"

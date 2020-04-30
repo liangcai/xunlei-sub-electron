@@ -2,6 +2,7 @@
 const {app, BrowserWindow} = require('electron')
 const path = require('path')
 const url = require('url')
+const {PythonShell} = require("python-shell")
 
 function createWindow () {
   // Create the browser window.
@@ -15,9 +16,8 @@ function createWindow () {
 
   // and load the index.html of the app.
   // mainWindow.loadURL('http://localhost:3000/')
-  // mainWindow.loadURL(`file://${path.join(__dirname, '../build/index.html')}`)
   mainWindow.loadURL(url.format({
-    pathname: path.join(__dirname, './build/index.html'),
+    pathname: path.join(__dirname, '../build/index.html'),
     protocol: 'file:',
     slashes: true
   }))
@@ -25,6 +25,14 @@ function createWindow () {
   // Open the DevTools.
   // mainWindow.webContents.openDevTools()
 }
+
+PythonShell.run(
+  "api/app.py", {pythonPath: ".venv/bin/python"}, function(err, results){
+    if (err) throw err
+    console.log('app.py is running')
+    console.log('results', results)
+  }
+)
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
