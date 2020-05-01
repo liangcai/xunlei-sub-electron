@@ -4,19 +4,17 @@ const path = require('path')
 const url = require('url')
 // const {PythonShell} = require("python-shell")
 const fs = require("fs")
-require('dotenv').config()
 
-const DEBUG = process.env.DEBUG
-const PY_DIST_FOLDER = process.env.PY_DIST_FOLDER
-const PY_FOLDER = process.env.PY_FOLDER
-const PY_MODULE = process.env.PY_MODULE
-const PY_PORT = process.env.PY_PORT
-
+let PY_DIST_FOLDER = 'pydist'
+let PY_FOLDER = 'api'
+let PY_MODULE = 'app'
+let PY_PORT = 5000
 let pyProc = null
 
 const guessPackaged = () => {
+  console.log('env到底能不能用，PY_DIST_FOLDER', PY_DIST_FOLDER)
   const fullPath = path.join(__dirname, PY_DIST_FOLDER)
-  if (DEBUG) {
+  if (process.env.NODE_ENV === "development") {
     console.log('Guess packaged path: ' + fullPath)
   }
   return fs.existsSync(fullPath)
@@ -28,10 +26,10 @@ const getScriptPath = () => {
   }
 
   if (process.platform == 'win32') {
-    return path.join(__dirname, PY_DIST_FOLDER, PY_FOLDER, PY_MODULE + '.exe')
+    return path.join(__dirname, PY_DIST_FOLDER, PY_MODULE, PY_MODULE + '.exe')
   }
 
-  return path.join(__dirname, PY_DIST_FOLDER, PY_FOLDER, PY_MODULE)
+  return path.join(__dirname, PY_DIST_FOLDER, PY_MODULE, PY_MODULE)
 }
 
 const getPythonPath = () => {
@@ -80,9 +78,6 @@ function createWindow () {
 
   // and load the index.html of the app.
   // mainWindow.loadURL('http://localhost:3000/')
-  if (process.env.DEBUG) {
-    
-  }
   mainWindow.loadURL(url.format({
     pathname: path.join(__dirname, 'build/index.html'),
     protocol: 'file:',
@@ -90,7 +85,7 @@ function createWindow () {
   }))
 
   // Open the DevTools.
-  if (DEBUG) {
+  if (process.env.NODE_ENV === "development") {
     mainWindow.webContents.openDevTools()
   }
 }
@@ -98,7 +93,7 @@ function createWindow () {
 /** 使用python-shell替代child_process时
 const OS = process.platform;
 
-if (process.env.DEBUG) {
+if (process.env.NODE_ENV === "development") {
   console.log('use python-shell');
 
   let pythonPath;

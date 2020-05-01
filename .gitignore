@@ -11,6 +11,12 @@
 # production
 /build
 /dist
+/pydist
+app.spec
+
+# py
+*.pyc
+__pycache__
 
 # misc
 .DS_Store
@@ -25,3 +31,4 @@ yarn-error.log*
 
 .venv
 .vscode
+package.json
