@@ -37,7 +37,11 @@ export default function DraggerArea(props) {
       url: "http://127.0.0.1:5000/api/subs",
     };
     return axios(options).then((res) => {
-      console.log("data:", res.data);
+      if (res.data.status === '0000') {
+        console.log('get sub exception: ', res.data.message)
+      } else {
+        console.log("get subs status: ", res.data.message, "data:", res.data);
+      }
       res.data.fpath = file.path;
       res.data.name = file.name;
       res.data.size = file.size;

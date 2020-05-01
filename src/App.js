@@ -18,7 +18,7 @@ function Header() {
     <header className="App-header">
       <img src={logo} className="App-logo" alt="logo" />
       <p>
-        选择视频文件或者文件夹，如果选择文件夹，会下载所有子目录下视频文件的字幕
+        选择视频文件或者文件夹, 数字是评价人数，星星是评分。
       </p>
     </header>
   );

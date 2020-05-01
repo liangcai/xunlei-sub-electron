@@ -53,6 +53,9 @@ function SubTree(props) {
       <TreeNode 
         title={data.title} 
         key={data.key}
+        selectable={false}
+        checkable={false}
+        disableCheckbox={true}
       >
         {data.subs.map(sub => (
           <TreeNode 
