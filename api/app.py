@@ -27,11 +27,15 @@ def get_subs():
   fpath = request.form.get('fpath')
   if not fpath:
     fpath = request.args.get('fpath')
-  subs = search(fpath)
+  try:
+    subs = search(fpath)
+    print('subs raw data: ', subs)
+  except Exception as e:
+    return {'message': "get subs found a exception: {}".format(e), 'status':'0000', 'subs': []}, 200
   if not subs:
-    return {'message': '超过最大重试次数后仍然未能获得正确结果', 'subs':[]}, 404
+    return {'message': 'not found subs', 'status':'1110', 'subs':[]}, 200
   subs.sort(key=lambda x: x['rate'], reverse=True)
-  return {'message': 'search success', 'subs': subs}, 200
+  return {'message': 'search success', 'status':'1111', 'subs': subs}, 200
 
 @app.route('/api/downsub', methods=['POST'])
 def download_sub():
