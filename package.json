@@ -43,18 +43,18 @@
     "react-dev-utils": "^10.0.0",
     "react-dom": "^16.13.1",
     "react-dropzone": "^10.2.2",
-    "react-scripts": "^3.4.0"
+    "react-scripts": "^3.4.1"
   },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "dev": "cross-env NODE_ENV=development electron .",
-    "prepack-win": "npm run build && npm run build-python",
-    "pack-win": "electron-builder --win --x64",
-    "prepack-mac": "npm run build && npm run build-python",
-    "pack-mac": "electron-builder --mac",
+    "dev": "chcp 65001 && cross-env NODE_ENV=development electron .",
+    "prepackage:win": "npm run build && npm run build-python",
+    "package:win": "electron-builder --win --x64",
+    "prepackage:mac": "npm run build && npm run build-python",
+    "package:mac": "electron-builder --mac",
     "build-python": "pyinstaller -y ./api/app.py --clean --distpath ./pydist"
   },
   "eslintConfig": {
