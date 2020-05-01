@@ -1,9 +1,10 @@
 // Modules to control application life and create native browser window
-const {app, BrowserWindow} = require('electron')
+const {app, BrowserWindow, ipcMain} = require('electron')
 const path = require('path')
 const url = require('url')
 // const {PythonShell} = require("python-shell")
-const fs = require("fs")
+const fs = require('fs')
+const {download} = require('electron-dl')
 
 let PY_DIST_FOLDER = 'pydist'
 let PY_FOLDER = 'api'
@@ -12,7 +13,6 @@ let PY_PORT = 5000
 let pyProc = null
 
 const guessPackaged = () => {
-  console.log('env到底能不能用，PY_DIST_FOLDER', PY_DIST_FOLDER)
   const fullPath = path.join(__dirname, PY_DIST_FOLDER)
   if (process.env.NODE_ENV === "development") {
     console.log('Guess packaged path: ' + fullPath)
@@ -72,17 +72,33 @@ function createWindow () {
     width: 800,
     height: 600,
     webPreferences: {
+      nodeIntegration: true,
       preload: path.join(__dirname, 'preload.js')
     }
   })
 
   // and load the index.html of the app.
-  // mainWindow.loadURL('http://localhost:3000/')
-  mainWindow.loadURL(url.format({
-    pathname: path.join(__dirname, 'build/index.html'),
-    protocol: 'file:',
-    slashes: true
-  }))
+  if (process.env.NODE_ENV === "development") {
+    mainWindow.loadURL('http://localhost:3000/');
+  } else {
+    mainWindow.loadURL(url.format({
+      pathname: path.join(__dirname, 'build/index.html'),
+      protocol: 'file:',
+      slashes: true
+    }));
+  }
+
+  ipcMain.on('download', async (event, info) => {
+    console.log('收到下载任务', info);
+    download(BrowserWindow.getFocusedWindow(), info.url, info.properties)
+      .then(dl => mainWindow.webContents.send("download complete", dl.getSavePath()))
+      .catch(error => {
+        throw error
+      })
+    // const win = BrowserWindow.getFocusedWindow();
+ 	  // console.log(await download(win, info.url, info.properties));
+    }
+  );
 
   // Open the DevTools.
   if (process.env.NODE_ENV === "development") {
