@@ -1,18 +1,25 @@
 import React from "react";
-import { Button } from "antd";
+import { Button, message } from "antd";
 import { DownloadOutlined } from "@ant-design/icons";
-// import FileDownload from "js-file-download";
-// import Axios from "axios";
-// import qs from "qs";
 
-const ipcRenderer = window.electron.ipcRenderer
+const ipcRenderer = window.electron.ipcRenderer;
 
 function DownloadBtn(props) {
+  const key = "downloadsub";
   const handDownloadBtnClick = (event) => {
     if (props.selectedSubs === 0 || props.selectedSubs === undefined) {
       alert("请先选择要下载的字幕");
     } else {
-      props.selectedSubs.map((item) => {
+      downloadSubs(props.selectedSubs)
+        .then(() => {
+          message.success({content: '开始下载字幕', key, duration: 3})
+        })
+    }
+  };
+
+  const downloadSubs = async (items) => {
+    return Promise.all(
+      items.map((item) => {
         let sname = item.fpath
           .replace(/^.*[\\\/]/, "")
           .replace(/^\.[^\.]*$/, "");
@@ -20,34 +27,19 @@ function DownloadBtn(props) {
         let savein = item.fpath.replace(/[^/]*?$/, "");
         let sfullname = sname + "." + sext;
 
-        console.log("download url: ", item.surl)
+        console.log("download url: ", item.surl);
 
         ipcRenderer.send("download", {
-            url: item.surl,
-            properties: { directory: savein, filename: sfullname },
-          })
-
-        ipcRenderer.on("download complete", (event, file) => {
-            console.log(`下载 ${file} 完成`); // Full file path
+          url: item.surl,
+          properties: { directory: savein, filename: sfullname },
         });
 
-        // console.log("download, url:", url, "data:", qs.stringify(data));
-        //   Axios(
-        //     {
-        //       url:url,
-        //       method: 'POST',
-        //       data: qs.stringify(data),
-        //       headers: {'content-type': 'application/x-www-form-urlencoded'}
-        //     })
-        //     .then((res) => {
-        //       console.log(res.headers);
-        //       let filename = decodeURI(res.headers['content-disposition'].match(/filename=(.*)/)[1]);
-        //       // let filename = sfullname;
-        //       FileDownload(res.data, filename);
-        //     });
-        //     return true;
-      });
-    }
+        ipcRenderer.on("download complete", (event, file) => {
+          console.log(`下载 ${file} 完成`); // Full file path
+          message.loading({ content: `下载 ${file} 完成`, key });
+        });
+      })
+    );
   };
 
   return (
