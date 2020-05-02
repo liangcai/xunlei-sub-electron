@@ -1,108 +1,118 @@
 // Modules to control application life and create native browser window
-const {app, BrowserWindow, ipcMain} = require('electron')
-const path = require('path')
-const url = require('url')
+const { app, BrowserWindow, ipcMain } = require("electron");
+const path = require("path");
+const url = require("url");
 // const {PythonShell} = require("python-shell")
-const fs = require('fs')
-const {download} = require('electron-dl')
+const fs = require("fs");
+const download = require("download");
 
-let PY_DIST_FOLDER = 'pydist'
-let PY_FOLDER = 'api'
-let PY_MODULE = 'app'
-let PY_PORT = 5000
-let pyProc = null
+let PY_DIST_FOLDER = "pydist";
+let PY_FOLDER = "api";
+let PY_MODULE = "app";
+let PY_PORT = 5000;
+let pyProc = null;
 
 const guessPackaged = () => {
-  const fullPath = path.join(__dirname, PY_DIST_FOLDER)
+  const fullPath = path.join(__dirname, PY_DIST_FOLDER);
   if (process.env.NODE_ENV === "development") {
-    console.log('Guess packaged path: ' + fullPath)
+    console.log("Guess packaged path: " + fullPath);
   }
-  return fs.existsSync(fullPath)
-}
+  return fs.existsSync(fullPath);
+};
 
 const getScriptPath = () => {
   if (!guessPackaged()) {
-    return path.join(__dirname, PY_FOLDER, PY_MODULE + '.py')
+    return path.join(__dirname, PY_FOLDER, PY_MODULE + ".py");
   }
 
-  if (process.platform == 'win32') {
-    return path.join(__dirname, PY_DIST_FOLDER, PY_MODULE, PY_MODULE + '.exe')
+  if (process.platform == "win32") {
+    return path.join(__dirname, PY_DIST_FOLDER, PY_MODULE, PY_MODULE + ".exe");
   }
 
-  return path.join(__dirname, PY_DIST_FOLDER, PY_MODULE, PY_MODULE)
-}
+  return path.join(__dirname, PY_DIST_FOLDER, PY_MODULE, PY_MODULE);
+};
 
 const getPythonPath = () => {
-  if (process.platform == 'win32') {
-    return path.join(__dirname, '.venv/Scripts/python')
+  if (process.platform == "win32") {
+    return path.join(__dirname, ".venv/Scripts/python");
   }
-  return path.join(__dirname, '.venv/bin/python')
-}
+  return path.join(__dirname, ".venv/bin/python");
+};
 
 const createPyProc = () => {
-  let script = getScriptPath()
-  let port = PY_PORT
-  let pyPath = getPythonPath()
-  
-  console.log('script: ', script)
-  console.log('pyPath: ', pyPath)
-  console.log('port: ', port)
+  let script = getScriptPath();
+  let port = PY_PORT;
+  let pyPath = getPythonPath();
+
+  console.log("script: ", script);
+  console.log("pyPath: ", pyPath);
+  console.log("port: ", port);
   if (guessPackaged()) {
-    pyProc = require('child_process').execFile(script, [port])
+    pyProc = require("child_process").execFile(script, [port]);
   } else {
-    pyProc = require('child_process').spawn(pyPath, [script, port])
+    pyProc = require("child_process").spawn(pyPath, [script, port]);
   }
 
-  if(pyProc != null) {
-    console.log('child process success on port ' + port)
+  if (pyProc != null) {
+    console.log("child process success on port " + port);
   }
-}
+};
 
 const exitPyProc = () => {
-  pyProc.kill()
-  pyProc = null
-}
+  pyProc.kill();
+  pyProc = null;
+};
 
-app.on('ready', createPyProc)
-app.on('will-quit', exitPyProc)
+app.on("ready", createPyProc);
+app.on("will-quit", exitPyProc);
 
-function createWindow () {
+function createWindow() {
   // Create the browser window.
   const mainWindow = new BrowserWindow({
     width: 800,
     height: 600,
     webPreferences: {
       nodeIntegration: true,
-      preload: path.join(__dirname, 'preload.js')
-    }
-  })
+      preload: path.join(__dirname, "preload.js"),
+    },
+  });
 
   // and load the index.html of the app.
   if (process.env.NODE_ENV === "development") {
-    mainWindow.loadURL('http://localhost:3000/');
+    mainWindow.loadURL("http://localhost:3000/");
   } else {
-    mainWindow.loadURL(url.format({
-      pathname: path.join(__dirname, 'build/index.html'),
-      protocol: 'file:',
-      slashes: true
-    }));
+    mainWindow.loadURL(
+      url.format({
+        pathname: path.join(__dirname, "build/index.html"),
+        protocol: "file:",
+        slashes: true,
+      })
+    );
   }
 
-  ipcMain.on('download', async (event, info) => {
-    console.log('收到下载任务', info);
-    download(BrowserWindow.getFocusedWindow(), info.url, info.properties)
-      .then(dl => mainWindow.webContents.send("download complete", dl.getSavePath()))
-      .catch(error => {
-        throw error
-      })
-    // const win = BrowserWindow.getFocusedWindow();
- 	  // console.log(await download(win, info.url, info.properties));
-    }
-  );
+  ipcMain.on("download", async (event, files) => {
+    console.log("收到下载任务列表", files);
+
+    const promises = files.map((file) => {
+      savePath = file.properties.directory + file.properties.filename
+      download(file.url).pipe(fs.createWriteStream(savePath));
+        // .then((dl) => {
+        //   mainWindow.webContents.send("download complete", dl.getSavePath());
+        //   return dl.getSavePath();
+        // })
+        // .catch((error) => {
+        //   return error;
+        // });
+    });
+    await Promise.all(promises).then((values) => {
+      console.log("values: ", values);
+      mainWindow.webContents.send("download complete")
+    });
+  });
 
   // Open the DevTools.
   if (process.env.NODE_ENV === "development") {
-    mainWindow.webContents.openDevTools()
+    mainWindow.webContents.openDevTools();
   }
 }
 
@@ -138,20 +148,20 @@ if (process.env.NODE_ENV === "development") {
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
-app.whenReady().then(createWindow)
+app.whenReady().then(createWindow);
 
 // Quit when all windows are closed.
-app.on('window-all-closed', function () {
+app.on("window-all-closed", function () {
   // On macOS it is common for applications and their menu bar
   // to stay active until the user quits explicitly with Cmd + Q
-  if (process.platform !== 'darwin') app.quit()
-})
+  if (process.platform !== "darwin") app.quit();
+});
 
-app.on('activate', function () {
+app.on("activate", function () {
   // On macOS it's common to re-create a window in the app when the
   // dock icon is clicked and there are no other windows open.
-  if (BrowserWindow.getAllWindows().length === 0) createWindow()
-})
+  if (BrowserWindow.getAllWindows().length === 0) createWindow();
+});
 
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and require them here.

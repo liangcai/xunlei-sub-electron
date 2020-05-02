@@ -18,28 +18,26 @@ function DownloadBtn(props) {
   };
 
   const downloadSubs = async (items) => {
-    return Promise.all(
-      items.map((item) => {
+      const files = items.map((item) => {
         let sname = item.fpath
           .replace(/^.*[\\\/]/, "")
-          .replace(/^\.[^\.]*$/, "");
+          .replace(/\.[^\.]*$/, "");
         let sext = item.surl.replace(/^.*\./, "");
         let savein = item.fpath.replace(/[^/]*?$/, "");
         let sfullname = sname + "." + sext;
 
-        console.log("download url: ", item.surl);
-
-        ipcRenderer.send("download", {
-          url: item.surl,
-          properties: { directory: savein, filename: sfullname },
-        });
-
-        ipcRenderer.on("download complete", (event, file) => {
-          console.log(`下载 ${file} 完成`); // Full file path
-          message.loading({ content: `下载 ${file} 完成`, key });
-        });
+        console.log(`savein: ${savein}, sname: ${sname},download url: ${item.surl}`);
+        return {url: item.surl, properties: { directory: savein, filename: sfullname }}
       })
-    );
+
+      console.log('files: ', files);
+
+      ipcRenderer.send("download", files);
+
+      ipcRenderer.on("download complete", (event) => {
+        console.log(`下载完成`); // Full file path
+        message.loading({ content: `下载完成` });
+      });
   };
 
   return (
