@@ -56,6 +56,8 @@
     "package:win": "electron-builder --win --x64",
     "prepackage:mac": "npm run build && npm run build-python",
     "package:mac": "electron-builder --mac",
+    "prepackage:linux": "npm run build && npm run build-python",
+    "package:linux": "electron-builder --linux",
     "build-python": "pyinstaller -y ./api/app.py --clean --distpath ./pydist"
   },
   "eslintConfig": {
