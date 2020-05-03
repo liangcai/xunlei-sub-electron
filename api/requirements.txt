@@ -67,7 +67,7 @@ PyYAML==3.13
 redis==2.10.6
 regex==2017.12.12
 repoze.lru==0.7
-requests==2.19.1
+requests==2.20.0
 Routes==2.4.1
 SecretStorage==2.3.1
 shadowsocks==2.8.2
