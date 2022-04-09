@@ -37,7 +37,7 @@
     "create-react-app": "^3.4.1",
     "dayjs": "^1.8.26",
     "download": "^8.0.0",
-    "moment": "2.24.0",
+    "moment": "2.29.2",
     "qs": "^6.9.3",
     "react": "^16.13.1",
     "react-dev-utils": "^10.0.0",
